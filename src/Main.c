@@ -5,13 +5,17 @@
 #define KNN_CENTER_PATH     "./data/Output." KNN_CENTER_FILETYPE
 #define KNN_DATA_PATH       "./data/Output." KNN_DATA_FILETYPE
 #define KNN_LEARNRATE       0.5f
+#define KNN_RADIUS          0.01f
 #define KNN_STARTPOINTS     50
 
 TransformedView tv;
 KNN knn;
 
 void Setup(AlxWindow* w){
-	knn = KNN_New(4U,2U,3U);
+    RGA_Set(Time_Nano());
+
+	tv = TransformedView_New((Vec2){ GetWidth(),GetHeight() });
+	knn = KNN_New(8U,2U,3U);
 
     for(int i = 0;i<KNN_STARTPOINTS;i++){
         KNN_Add_Data(&knn,(NeuralType*[]){
@@ -23,21 +27,34 @@ void Setup(AlxWindow* w){
     //KNN_Save(&knn,KNN_CENTER_PATH);
     //KNN_Load(&knn,KNN_CENTER_PATH);
     
-	tv = TransformedView_New((Vec2){ GetWidth(),GetHeight() });
 }
 void Update(AlxWindow* w){
     tv.ZoomSpeed = 1.0f * w->ElapsedTime;
 	TransformedView_HandlePanZoom(&tv,window.Strokes,GetMouse());
+    Vec2 const mp = TransformedView_ScreenWorldPos(&tv,GetMouse());
 
-    if(Stroke(ALX_MOUSE_R).PRESSED){
+    if(Stroke(ALX_KEY_W).PRESSED){
         KNN_Relocate(&knn,KNN_LEARNRATE);
     }
+    
     if(Stroke(ALX_MOUSE_L).PRESSED){
-        Vec2 const p = TransformedView_ScreenWorldPos(&tv,GetMouse());
         KNN_Add_Data(&knn,(NeuralType*[]){
-            (NeuralType[]){ p.x,p.y },
+            (NeuralType[]){ mp.x,mp.y },
             NULL
         });
+    }
+    if(Stroke(ALX_MOUSE_R).PRESSED){
+        for(int i = 0;i<knn.dps.size;i++){
+            NeuralType* nt = *(NeuralType**)Vector_Get(&knn.dps,i);
+            const Vec2 d = Vec2_Sub(mp,(Vec2){ nt[0],nt[1] });
+            const float d2 = Vec2_Mag2(d);
+            
+            if(d2 < KNN_RADIUS * KNN_RADIUS){
+                free(nt);
+                Vector_Remove(&knn.dps,i);
+                break;
+            }
+        }
     }
 
 	Clear(BLACK);
@@ -46,16 +63,23 @@ void Update(AlxWindow* w){
 	Vec2 const sd = TransformedView_WorldScreenLength(&tv,(Vec2){ 1.0f,1.0f });
 	Rect_RenderXWire(WINDOW_STD_ARGS,sp,sd,WHITE,1.0f);
 
-	Vec2 const ntd = TransformedView_WorldScreenLength(&tv,(Vec2){ 0.01f,0.01f });
+	Vec2 const ntd = TransformedView_WorldScreenLength(&tv,(Vec2){ KNN_RADIUS,KNN_RADIUS });
     for(int i = 0;i<knn.dps.size;i++){
         NeuralType* nt = *(NeuralType**)Vector_Get(&knn.dps,i);
         const int c = KNN_Centerize(&knn,nt);
         Pixel color = WHITE;
         if(c == 0)      color = RED;
         else if(c == 1) color = GREEN;
+        else if(c == 2) color = YELLOW;
         
         Vec2 const ntp = TransformedView_WorldScreenPos(&tv,(Vec2){ nt[0],nt[1] });
         Circle_R_RenderWire(WINDOW_STD_ARGS,ntp,ntd,color,1.0f);
+    }
+
+    for(int i = 0;i<knn.outs;i++){
+        NeuralType* nt = knn.cts[i];
+        Vec2 const ntp = TransformedView_WorldScreenPos(&tv,(Vec2){ nt[0],nt[1] });
+        Circle_R_RenderWire(WINDOW_STD_ARGS,ntp,ntd,BLUE,1.0f);
     }
 }
 void Delete(AlxWindow* w){
