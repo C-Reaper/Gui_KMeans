@@ -4,7 +4,7 @@
 
 #define KMEANS_CENTER_PATH     "./data/Output." KMEANS_CENTER_FILETYPE
 #define KMEANS_DATA_PATH       "./data/Output." KMEANS_DATA_FILETYPE
-#define KMEANS_LEARNRATE       0.5f
+#define KMEANS_LEARNRATE       0.1f
 #define KMEANS_RADIUS          0.01f
 #define KMEANS_STARTPOINTS     50
 
@@ -15,7 +15,7 @@ void Setup(AlxWindow* w){
     RGA_Set(Time_Nano());
 
 	tv = TransformedView_New((Vec2){ GetWidth(),GetHeight() });
-	knn = KMeans_New(8U,2U,3U);
+	knn = KMeans_New(2U,3U);
 
     for(int i = 0;i<KMEANS_STARTPOINTS;i++){
         KMeans_Add_Data(&knn,(NeuralType*[]){
@@ -33,17 +33,17 @@ void Update(AlxWindow* w){
 	TransformedView_HandlePanZoom(&tv,window.Strokes,GetMouse());
     Vec2 const mp = TransformedView_ScreenWorldPos(&tv,GetMouse());
 
-    if(Stroke(ALX_KEY_W).PRESSED){
+    if(Stroke(ALX_KEY_W).DOWN){
         KMeans_Relocate(&knn,KMEANS_LEARNRATE);
     }
     
-    if(Stroke(ALX_MOUSE_L).PRESSED){
+    if(Stroke(ALX_MOUSE_L).DOWN){
         KMeans_Add_Data(&knn,(NeuralType*[]){
             (NeuralType[]){ mp.x,mp.y },
             NULL
         });
     }
-    if(Stroke(ALX_MOUSE_R).PRESSED){
+    if(Stroke(ALX_MOUSE_R).DOWN){
         for(int i = 0;i<knn.dps.size;i++){
             NeuralType* nt = *(NeuralType**)Vector_Get(&knn.dps,i);
             const Vec2 d = Vec2_Sub(mp,(Vec2){ nt[0],nt[1] });
