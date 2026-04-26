@@ -1,199 +1,66 @@
-# Gui_KMeans
-
+# Project README
 
 ## Overview
-Interactive K-Means clustering visualization tool with real-time graphical feedback. Implements the K-Means unsupervised machine learning algorithm for partitioning data points into clusters.
+This project is a simple GUI application for visualizing the K-Means clustering algorithm. It provides an interactive interface to demonstrate how data points are grouped into clusters based on their proximity.
 
-## Core Algorithm
+## Features
+- Visual representation of K-Means clustering.
+- Interactive UI to set the number of clusters (K).
+- Real-time updates as new data points are added or existing ones moved.
+- Different colors for each cluster to visually distinguish them.
+- Save and load datasets for consistent testing.
 
-### K-Means Clustering
-- Unsupervised learning algorithm
-- Partitions data into K clusters
-- Minimizes variance within clusters
-- Requires no labeled training data
-
-### Algorithm Steps
-1. **Initialization**: Place K cluster centers (centroids) randomly
-2. **Assignment**: Assign each point to nearest cluster center (Euclidean distance)
-3. **Update**: Recalculate cluster centers as mean of assigned points
-4. **Convergence**: Repeat until centers stabilize
-
-### Interactive Features
-- **Left-Click**: Add new data points
-- **Right-Click**: Remove data points
-- **W Key**: Execute one K-Means iteration
-- **Pan/Zoom**: Navigate visualization
-
-### Visualization
-- Points color-coded by cluster assignment
-- Cluster centers shown as special markers
-- Real-time update display
-- Interactive coordinate transformation
-
-### Technical Implementation
-- 2D data point management
-- Euclidean distance calculations
-- Dynamic cluster center tracking
-- File I/O for saving/loading clusters
-- TransformedView for coordinate transforms
-- WindowEngine for rendering
-
-## Data Structures
-- Point set: Dynamic collection of data points
-- Cluster centers: K center points
-- Assignments: Point-to-cluster mapping
-
-## Use Cases
-- Machine learning visualization
-- Understanding clustering algorithms
-- Data point classification experiments
-- Educational machine learning tool
-
-## Performance
-- Real-time clustering on 2D data
-- Interactive responsiveness
-- Efficient distance calculations
-- Quick convergence
-
-
-## Building the Project
-
+## Project Structure
 ### Prerequisites
-- C/C++ Compiler (GCC, Clang, or MSVC)
+- C/C++ Compiler and Debugger (GCC, Clang)
 - Make utility
 - Standard development tools
+- X11 library for GUI functionality
 
-### Build Steps
-
-1. Navigate to project directory:
-```bash
-cd Gui_KMeans
+### Build & Run
+To build the project on Linux:
+```sh
+cd <Project>
+make -f Makefile.linux all
+make -f Makefile.linux exe
 ```
 
-2. Build the project:
-```bash
-make -f Makefile.(os) all
+To run the built application:
+```sh
+./build/Main
 ```
 
-3. For clean rebuild:
-```bash
-make -f Makefile.(os) clean
-make -f Makefile.(os) all
+For Windows (using MinGW-w64):
+```sh
+cd <Project>
+make -f Makefile.windows all
+make -f Makefile.windows exe
 ```
 
-4. If there are ./bin and ./libs directories, build libs with:
-```bash
-make -f Makefile.(os) cleanlib
-make -f Makefile.(os) lib
+To run the built application on Windows:
+```sh
+build\Main.exe
 ```
 
-### Build Options
-```bash
-make -f Makefile.(os) all         # build output
-make -f Makefile.(os) do        # build + exe output
-make -f Makefile.(os) clean   # Remove build artifacts
+For Emscripten (for web):
+```sh
+cd <Project>
+make -f Makefile.web all
+make -f Makefile.web exe
 ```
 
-## Running the Project
+Then open `build/index.html` in a web browser.
 
-Execute the compiled binary:
-
-```bash
-./build/Main(.exe)
+For Wine (Linux cross compile for Windows):
+```sh
+cd <Project>
+make -f Makefile.wine all
+make -f Makefile.wine exe
 ```
 
-Or using make:
-```bash
-make -f Makefile.(os) exe
+To run the built application:
+```sh
+wine build/Main.exe
 ```
 
-## Project Organization
-
-```
-Gui_KMeans/
-├── src/
-│   ├── Main.c          # Entry point
-│   └── *.c             # Implementation files
-├── Makefile            # Build configuration
-└── README.md           # This file
-```
-
-## Technical Details
-
-### Language: C/C++
-- Performance-oriented
-- Direct hardware access where needed
-- Memory efficient
-- Widely portable
-
-### Key Technologies
-- Standard C library
-- System-specific libraries as needed
-- Algorithm optimization
-- Efficient data structures
-
-### Code Quality
-- Clean, readable implementation
-- Proper error handling
-- Resource management
-- Well-documented algorithms
-
-## Development Notes
-
-### Architecture Decisions
-- Modular design for reusability
-- Efficient algorithms for performance
-- Clear separation of concerns
-- Extensible structure
-
-### Performance Optimizations
-- Algorithm efficiency
-- Memory layout optimization
-- Cache-conscious programming
-- Minimal overhead
-
-### Portability
-- Cross-platform compatible
-- Platform-specific optimizations where possible
-- Standard library usage
-- No external dependencies (where feasible)
-
-## Troubleshooting
-
-### Build Issues
-- Ensure compiler is installed
-- Check file paths and permissions
-- Verify Make installation
-- Review compiler error messages
-
-### Runtime Issues
-- Check input data validity
-- Verify file accessibility
-- Ensure sufficient memory
-- Review output format
-
-### Performance Issues
-- Check compiler optimization flags
-- Profile hot code paths
-- Review algorithm complexity
-- Consider input size
-
-## Future Improvements
-
-Potential enhancements:
-- Additional optimization opportunities
-- Extended functionality
-- Platform-specific optimizations
-- Performance profiling
-
-## References
-
-For technical background:
-- Algorithm textbooks
-- Computer science references
-- Language documentation
-- Online educational resources
-
----
-
-*Project implementing practical algorithms and data structures in C/C++*
+This README provides a concise overview of the project, its features, and how to build and run it on different platforms.
